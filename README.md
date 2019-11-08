@@ -25,6 +25,6 @@ Now you are ready to implement assignment, to do this you will need to use an in
 section in the repository and start with appropriate issue, when you think that finished the issue create a PR and ask 
 the upstream repository accept your changes.
 
-##Contribution
+###Contribution
 Feel free to contribute into this project. New tasks and kata are welcome.
 
