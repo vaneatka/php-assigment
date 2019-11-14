@@ -1,0 +1,11 @@
+
+Feature: Parse file
+  In order to persist data to database
+  File should be parsed and normalized
+
+  Scenario: Listing two files in a directory
+    Given I am in a directory "test"
+    And I have a file named "foo"
+    And I have a file named "bar"
+    When I run "ls"
+    Then I should get:
