@@ -1,2 +1,17 @@
 framework:
-    workflows: null
+    workflows:
+        file_process:
+            type: state_machine
+            places:
+            - pending
+            - error
+            - processed
+            transitions:
+                - processing:
+                      from: pending
+                      to:
+                          - error
+                          - processed
+                - retry:
+                      from: error
+                      to: pending
