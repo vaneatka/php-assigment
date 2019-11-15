@@ -44,7 +44,11 @@ class ProcessFileHandler implements MessageHandlerInterface
             $this->entityManager->persist($file);
             $this->entityManager->flush();
         } catch (\Exception $e) {
-            dd($e);
+            $file->setStatus('error')
+                ->setFileName($this->parser->getFileName($file_data))
+                ->setDocumentType($this->parser->getExtension($file_data));
+            $this->entityManager->persist($file);
+            $this->entityManager->flush();
         }
     }
 }
