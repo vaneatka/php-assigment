@@ -25,22 +25,17 @@ class File
     private $createdAt;
 
     /**
-     * @ORM\Column(type="integer")
-     */
-    private $mapId;
-
-    /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $documentType;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255,nullable=true)
      */
     private $fileName;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $status;
 
@@ -73,17 +68,6 @@ class File
         return $this;
     }
 
-    public function getMapId(): ?int
-    {
-        return $this->mapId;
-    }
-
-    public function setMapId(int $mapId): self
-    {
-        $this->mapId = $mapId;
-
-        return $this;
-    }
 
     public function getDocumentType(): ?string
     {

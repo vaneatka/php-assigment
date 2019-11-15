@@ -4,7 +4,6 @@
 namespace App\Message;
 
 
-use App\Entity\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class ProcessFile
@@ -12,7 +11,7 @@ class ProcessFile
     protected $fileData;
     private $file;
 
-    public function __construct(UploadedFile $fileData, File $file)
+    public function __construct(UploadedFile $fileData,int $file)
     {
         $this->fileData = $fileData;
         $this->file = $file;
@@ -23,9 +22,9 @@ class ProcessFile
         return $this->fileData;
     }
     /**
-     * @return File
+     * @return integer
      */
-    public function getFile(): File
+    public function getFile(): int
     {
         return $this->file;
     }

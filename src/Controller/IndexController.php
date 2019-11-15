@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\File;
 use App\Entity\Map;
 use App\Message\ProcessFile;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -19,25 +20,21 @@ class IndexController extends AbstractController
      * @Route("/", name="index")
      * @throws \Exception
      */
-    public function index(MessageBusInterface $messageBus, Request $request)
+    public function index(MessageBusInterface $messageBus, Request $request, EntityManagerInterface $entityManager)
     {
-
         $form = $this->createForm(FileType::class);
 
         $form->handleRequest($request);
-        $file = new File();
-        $map = new Map();
-        $map->setFile($file);
-
-
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($map);
-        $em->flush();
-//        dd($file);
-
         if($form->isSubmitted() && $form->isValid()){
+
+            $file = new File();
+            $file->setStatus('pending')
+                ->setCreatedAt(new \DateTime());
+            $entityManager->persist($file);
+            $entityManager->flush();
+            $fileId = $file->getId();
             $file_data = $form['fileName']->getData();
-            $message = new ProcessFile($file_data, $file );
+            $message = new ProcessFile($file_data, $fileId);
             $messageBus->dispatch($message);
         }
 

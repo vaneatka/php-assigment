@@ -6,7 +6,10 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin -
 
 RUN apk add --no-cache $PHPIZE_DEPS \
     && pecl install xdebug-2.6.1 \
-    && docker-php-ext-enable xdebug
+    && docker-php-ext-enable xdebug \
+    && docker-php-ext-install pdo \
+    && docker-php-ext-install pdo_mysql
+
 
 COPY xdebug.ini  /usr/local/etc/php/conf.d/xdebug.ini
 
