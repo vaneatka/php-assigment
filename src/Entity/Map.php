@@ -2,9 +2,9 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\File;
 use Doctrine\ORM\Mapping as ORM;
+
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\MapRepository")
@@ -13,106 +13,60 @@ class Map
 {
     /**
      * @ORM\Id()
-     * @ORM\GeneratedValue()
+//     * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
-     */
-    private $mapId;
-
-    /**
      * @ORM\Column(type="json")
      */
-    private $field = [];
+    private $content = [];
 
     /**
-     * @var ArrayCollection
-     * @ORM\OneToMany(targetEntity="App\Entity\FileContents", mappedBy="mapId")
+     * @var File
+     * @ORM\ManyToOne(targetEntity="File", inversedBy="maps", cascade={"persist"})
+     * @ORM\JoinColumn(name="mapId", referencedColumnName="id")
      */
-
-    private $map;
-
-    public function __construct()
-    {
-        $this->map = new ArrayCollection();
-    }
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $createdAt;
+    private $file;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getMapId(): ?int
+    public function getContent(): ?array
     {
-        return $this->mapId;
+        return $this->content;
     }
 
-    public function setMapId(int $mapId): self
+    public function setContent(array $content): self
     {
-        $this->mapId = $mapId;
+        $this->content = $content;
 
         return $this;
     }
 
-    public function getField(): ?array
+    public function getFileId(): ?int
     {
-        return $this->field;
+        return $this->fileId;
     }
 
-    public function setField(array $field): self
+    public function setFileId(int $fileId): self
     {
-        $this->field = $field;
+        $this->fileId = $fileId;
 
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getFile(): ?File
     {
-        return $this->createdAt;
+        return $this->file;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setFile(?File $file): self
     {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|FileContents[]
-     */
-    public function getMap(): Collection
-    {
-        return $this->map;
-    }
-
-    public function addMap(FileContents $map): self
-    {
-        if (!$this->map->contains($map)) {
-            $this->map[] = $map;
-            $map->setMapId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMap(FileContents $map): self
-    {
-        if ($this->map->contains($map)) {
-            $this->map->removeElement($map);
-            // set the owning side to null (unless already changed)
-            if ($map->getMapId() === $this) {
-                $map->setMapId(null);
-            }
-        }
+        $this->file = $file;
 
         return $this;
     }

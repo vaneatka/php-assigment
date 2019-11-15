@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Map;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -17,11 +18,6 @@ class File
      * @ORM\Column(type="integer")
      */
     private $id;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $fileId;
 
     /**
      * @ORM\Column(type="datetime")
@@ -44,31 +40,25 @@ class File
     private $fileName;
 
     /**
-     * @var ArrayCollection
-     * @ORM\OneToMany(targetEntity="FileContents", mappedBy="fileId")
+     * @ORM\Column(type="string", length=255)
      */
-    private $map;
+    private $status;
+
+    /**
+     * @var ArrayCollection
+     *@ORM\OneToMany(targetEntity="Map", mappedBy="file")
+     *
+     */
+    private $maps;
 
     public function __construct()
     {
-        $this->map = new ArrayCollection();
+        $this->maps = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getFileId(): ?int
-    {
-        return $this->fileId;
-    }
-
-    public function setFileId(int $fileId): self
-    {
-        $this->fileId = $fileId;
-
-        return $this;
     }
 
     public function getCreatedAt(): ?\DateTimeInterface
@@ -119,34 +109,47 @@ class File
         return $this;
     }
 
-    /**
-     * @return Collection|FileContents[]
-     */
-    public function getMap(): Collection
+    public function getStatus(): ?string
     {
-        return $this->map;
+        return $this->status;
     }
 
-    public function addMap(FileContents $map): self
+    public function setStatus(string $status): self
     {
-        if (!$this->map->contains($map)) {
-            $this->map[] = $map;
-            $map->setFileId($this);
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Map[]
+     */
+    public function getMaps(): Collection
+    {
+        return $this->maps;
+    }
+
+    public function addMap(Map $map): self
+    {
+        if (!$this->maps->contains($map)) {
+            $this->maps[] = $map;
+            $map->setFile($this);
         }
 
         return $this;
     }
 
-    public function removeMap(FileContents $map): self
+    public function removeMap(Map $map): self
     {
-        if ($this->map->contains($map)) {
-            $this->map->removeElement($map);
+        if ($this->maps->contains($map)) {
+            $this->maps->removeElement($map);
             // set the owning side to null (unless already changed)
-            if ($map->getFileId() === $this) {
-                $map->setFileId(null);
+            if ($map->getFile() === $this) {
+                $map->setFile(null);
             }
         }
 
         return $this;
     }
+
 }

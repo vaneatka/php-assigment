@@ -20,7 +20,7 @@ class FileRepository extends ServiceEntityRepository
     }
 
     // /**
-    //  * @return File[] Returns an array of File objects
+    //  * @return FileProcess[] Returns an array of FileProcess objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class FileRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?File
+    public function findOneBySomeField($value): ?FileProcess
     {
         return $this->createQueryBuilder('f')
             ->andWhere('f.exampleField = :val')
