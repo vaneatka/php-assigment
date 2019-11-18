@@ -1,7 +1,9 @@
 {% extends 'base.html.twig' %}
-
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
 {% block body %}
-{{ form(form) }}
+{{ form_start(form)  }}
+    {{ form_errors(form) }}
+{{ form_end(form) }}
 
-{{ formData ?? null }}
+    {% include 'pages/partials/contents.html.twig' %}
 {% endblock %}

@@ -1,0 +1,39 @@
+{% if files %}
+
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">Id</th>
+        <th scope="col">File Name</th>
+        <th scope="col">Document Type</th>
+        <th scope="col">Status</th>
+        <th scope="col">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for file in files %}
+
+    <tr>
+        <th scope="row">{{ file.getId() }}</th>
+        <td>{{ file.getFileName() }}</td>
+        <td>{{ file.getDocumentType() }}</td>
+        <td>{{ file.getStatus() }}</td>
+        <td>
+            <a href="{{ path('file', {id: file.getId()} ) }}">Show contents</a>
+        </td>
+    </tr>
+
+    {% endfor %}
+
+
+    </tbody>
+</table>
+
+{% endif %}
+
+
+
+
+
+
+

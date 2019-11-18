@@ -27,26 +27,30 @@ class ProcessFileHandler implements MessageHandlerInterface
 
     public function __invoke(ProcessFile $processFile)
     {
-        $fileId=$processFile->getFile();
-        $file = $this->entityManager->getRepository(File::class)->find($fileId);
-        $file_data=$processFile->getFileData();
+        $file = $this->entityManager->getRepository(File::class)->find($processFile->getFile());
         try {
-            $fileParsedData = $this->parser->parse($file_data);
+        $file_data=$processFile->getFileData();
+            $fileParsedData = $file_data['data']['results'];
+            ;
             foreach ($fileParsedData as $item){
                 $map = new Map();
                 $map->setContent($item);
                 $file->addMap($map);
                 $this->entityManager->persist($map);
             }
-            $file->setStatus('processed')
-                ->setFileName($this->parser->getFileName($file_data))
-                ->setDocumentType($this->parser->getExtension($file_data));
+
+            $file->setStatus($file_data['data']['status'])
+                ->setFileName($file_data['fileName'])
+                ->setDocumentType($file_data['extension']);
             $this->entityManager->persist($file);
             $this->entityManager->flush();
+
         } catch (\Exception $e) {
+
             $file->setStatus('error')
-                ->setFileName($this->parser->getFileName($file_data))
-                ->setDocumentType($this->parser->getExtension($file_data));
+                ->setFileName($file_data['fileName'])
+                ->setDocumentType($file_data['extension']);
+
             $this->entityManager->persist($file);
             $this->entityManager->flush();
         }

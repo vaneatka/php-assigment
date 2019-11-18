@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>File {{ file.getFileName() }} contents</h1>
+
+    <ul class="list-group">
+    {%  for item in collection  %}
+        <li class="list-group-item">{{ item }}</li>
+    {%   endfor%}
+    </ul>
+
+{% endblock %}

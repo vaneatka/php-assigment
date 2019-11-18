@@ -1,5 +1,6 @@
 doctrine:
     dbal:
+        schema_filter: '~^(?!messenger_messages)~'
         # configure these for your database server
         # use postgresql for PostgreSQL
         # use sqlite for SQLite

@@ -11,7 +11,7 @@ class ProcessFile
     protected $fileData;
     private $file;
 
-    public function __construct(UploadedFile $fileData,int $file)
+    public function __construct(array $fileData,int $file)
     {
         $this->fileData = $fileData;
         $this->file = $file;

@@ -9,51 +9,100 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Encoder\CsvEncoder;
 
+
 class Parser
 {
 
-    public function parse(UploadedFile $file)
+    private $serializer;
+
+    public function __construct()
+    {
+
+        $encoder = [new CsvEncoder(), new XmlEncoder(), new JsonEncoder()];
+        $this->serializer = new Serializer([], $encoder);
+
+    }
+
+
+    private function parse(UploadedFile $file)
     {
         $fileUrl = $this->getPathname($file);
         $extension = $this->getExtension($file);
-//
-        $encoder = [new CsvEncoder(), new XmlEncoder(), new JsonEncoder()];
-        $serializer = new Serializer([], $encoder);
         $file_content = file_get_contents($fileUrl);
 
-//        $extension = pathinfo($fileUrl, PATHINFO_EXTENSION);
         if (empty($file_content)){
-            throw new Exception('The file is empty');
+            return  ['results' => [['File Empty']],
+                "status" => "error"];
         }
+
         if ($extension == 'json'){
-            $result = $serializer->decode($file_content, 'json');
-//            $result = json_decode($file_content, true);
-        } elseif ($extension == 'xml'){
-            $result = $serializer->decode($file_content, 'xml');
-
-//            $xml_result= simplexml_load_string($file_content);
-//            $json_result = json_encode($xml_result);
-//            $result = json_decode($json_result, true);
-        } elseif ($extension == 'csv'){
-            $result = $serializer->decode($file_content, 'csv');
-
-//            $result= str_getcsv($file_content);
-        } else {
-            throw new Exception('File"s content is broken '. $fileUrl. $extension);
+            return $this->parseJson($file_content);
         }
-        return $result;
+
+        if ($extension == 'xml'){
+            return $this->parseXml($file_content);
+        }
+
+        if ($extension == 'csv'){
+            return $this->parseCsv($file_content);
+        }
+
     }
 
-    public function getPathname(UploadedFile $file):string
+    private function parseJson($content):array {
+        try{
+        return  ['results' => $this->serializer->decode($content, 'json'),
+                    "status" => 'processed'];
+        }catch (Exception $error){
+          return  ['results' => [[$error->getMessage()]],
+                    "status" => "error"];
+        }
+    }
+
+    private function parseXml($content):array {
+        try{
+            return  ['results' => $this->serializer->decode($content, 'xml'),
+                "status" => 'processed'];
+        }catch (Exception $error){
+            return  ['results' => [[$error->getMessage()]],
+                "status" => "error"];
+        }
+    }
+
+    private function parseCsv($content):array {
+        try{
+            return  ['results' => $this->serializer->decode($content, 'csv'),
+                "status" => 'processed'];
+        }catch (Exception $error){
+            return  ['results' => [[$error->getMessage()]],
+                "status" => "error"];
+        }
+    }
+
+
+
+    private function getPathname(UploadedFile $file):string
     {
         return $fileUrl = $file->getPathname();
     }
 
-    public function getExtension(UploadedFile $file):string {
+    private function getExtension(UploadedFile $file):string {
         return $file->getClientOriginalExtension();
     }
 
-    public function getFileName(UploadedFile $file):string {
+    private function getFileName(UploadedFile $file):string {
         return $file->getClientOriginalName();
     }
+
+    public function parsedData(UploadedFile $file)
+    {
+        return [
+            'pathName' => $this->getPathname($file),
+            'extension' => $this->getExtension($file),
+            'fileName' => $this->getFileName($file),
+            'data' => $this->parse($file)
+        ];
+    }
+
+
 }

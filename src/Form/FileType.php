@@ -3,7 +3,7 @@
 namespace App\Form;
 
 use App\Entity\File;
-use Doctrine\DBAL\Types\TextType;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\FileType as FileTypeConstraint;
@@ -15,7 +15,10 @@ class FileType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('fileName', FileTypeConstraint::class, ['mapped'=>false])
+            ->add('fileName', FileTypeConstraint::class, [
+                'label' => 'Select a file',
+                'mapped' => false,
+                ])
             ->add('parse', SubmitType::class)
         ;
     }
@@ -23,7 +26,7 @@ class FileType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-
+            'data_class' => File::class
         ]);
     }
 }

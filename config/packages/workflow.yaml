@@ -2,16 +2,20 @@ framework:
     workflows:
         file_process:
             type: state_machine
+            marking-store:
+              type: 'method'
+              property: 'status'
+            supports:
+              - App\Entity\File
+            initial-marking: pending
             places:
             - pending
             - error
             - processed
             transitions:
-                - processing:
+                processing:
                       from: pending
-                      to:
-                          - error
-                          - processed
-                - retry:
+                      to: processed
+                retry:
                       from: error
                       to: pending
