@@ -5,7 +5,8 @@
       <tool tool_name="Behat">
         <settings>
           <configurations>
-            <local_configuration executable_path="$PROJECT_DIR$/vendor/behat/behat/bin/behat" />
+            <local_configuration configuration_file_path="$PROJECT_DIR$/bin/phpunit" executable_path="$PROJECT_DIR$/vendor/behat/behat/bin/behat" use_configuration_file="true" />
+            <configuration_by_sdk interpreter_id="695cf5dd-8309-4fd5-8adb-da3616c27b72" configuration_file_path="/app/bin/phpunit" executable_path="/app/vendor/behat/behat/bin/behat" />
           </configurations>
         </settings>
       </tool>
@@ -17,6 +18,7 @@
         <cache>
           <versions>
             <info id="Local" version="3.5.0" />
+            <info id="interpreter-695cf5dd-8309-4fd5-8adb-da3616c27b72" version="3.5.0" />
           </versions>
         </cache>
       </tool>

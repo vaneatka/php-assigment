@@ -30,8 +30,7 @@ class ProcessFileHandler implements MessageHandlerInterface
         $file = $this->entityManager->getRepository(File::class)->find($processFile->getFile());
         try {
         $file_data=$processFile->getFileData();
-            $fileParsedData = $file_data['data']['results'];
-            ;
+        $fileParsedData = $file_data['data']['results'];
             foreach ($fileParsedData as $item){
                 $map = new Map();
                 $map->setContent($item);
@@ -41,15 +40,16 @@ class ProcessFileHandler implements MessageHandlerInterface
 
             $file->setStatus($file_data['data']['status'])
                 ->setFileName($file_data['fileName'])
-                ->setDocumentType($file_data['extension']);
+                ->setDocumentType($file_data['extension'])
+                ->setRawText($file_data['rawContent']);
             $this->entityManager->persist($file);
             $this->entityManager->flush();
 
         } catch (\Exception $e) {
-
             $file->setStatus('error')
                 ->setFileName($file_data['fileName'])
-                ->setDocumentType($file_data['extension']);
+                ->setDocumentType($file_data['extension'])
+                ->setRawText($file_data['rawContent']);
 
             $this->entityManager->persist($file);
             $this->entityManager->flush();

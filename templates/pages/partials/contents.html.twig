@@ -19,9 +19,13 @@
         <td>{{ file.getDocumentType() }}</td>
         <td>{{ file.getStatus() }}</td>
         <td>
-            <a href="{{ path('file', {id: file.getId()} ) }}">Show contents</a>
+            <a href="{{ path('file', {id: file.getId()})}}" class="btn btn-primary">Show contents</a>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#raw-view">
+                View Raw
+            </button>
         </td>
     </tr>
+
 
     {% endfor %}
 
@@ -30,6 +34,7 @@
 </table>
 
 {% endif %}
+
 
 
 

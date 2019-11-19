@@ -43,7 +43,7 @@ class FileParseContext implements Context
     public function theIsParsed($arg1)
     {
         $parser = $this->kernel->getContainer()->get(\App\Service\Parser::class);
-        $this->result =  $parser->parse($this->fileUrl.$arg1);
+        $this->result =  $parser->parsedData($this->fileUrl.$arg1);
         return true;
     }
 

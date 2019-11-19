@@ -35,6 +35,29 @@ class File
     private $fileName;
 
     /**
+     *  @ORM\Column(type="text", nullable=true)
+     */
+    private $rawText;
+
+    /**
+     * @return mixed
+     */
+    public function getRawText()
+    {
+        return $this->rawText;
+    }
+
+    /**
+     * @param mixed $rawText
+     */
+    public function setRawText($rawText): self
+    {
+        $this->rawText = $rawText;
+
+        return $this;
+    }
+
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $status;

@@ -3,13 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\File;
-use App\Message\ProcessFile;
-use App\Service\Parser;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Service\FileHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\FileType;
 
@@ -29,33 +26,23 @@ class IndexController extends AbstractController
      * @Route("/", name="index")
      * @throws \Exception
      */
-    public function index(MessageBusInterface $messageBus, Request $request, EntityManagerInterface $entityManager)
+    public function index(Request $request)
     {
-        $stateMachine = $this->kernel->getContainer()->get('state_machine.file_process');
-
-        $parser = $this->kernel->getContainer()->get(Parser::class);
-
+        $fileHandler = $this->kernel->getContainer()->get(FileHandler::class);
         $form = $this->createForm(FileType::class);
-
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
-            $file = new File();
-            $file->setStatus('pending')
-                ->setCreatedAt(new \DateTime());
-            $entityManager->persist($file);
-            $entityManager->flush();
-            $file_data = $form['fileName']->getData();
-            $message = new ProcessFile($parser->parsedData($file_data), $file->getId());
-            $messageBus->dispatch($message);
+            $fileData = $form['fileName']->getData();
+            $fileHandler->handle($fileData);
         }
 
-        return $this->render('pages/index.html.twig', ['form' => $form->createView(),
-            "files"=> $this->showFiles()]);
+        return $this->render(
+            'pages/index.html.twig',
+            [
+                'form' => $form->createView(),
+                "files"=> $this->getDoctrine()->getRepository(File::class)->findAll(),
+            ]);
     }
 
-    public function showFiles(){
-
-        return $this->getDoctrine()->getRepository(File::class)->findAll();
-    }
 }
