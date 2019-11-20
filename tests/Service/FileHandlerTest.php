@@ -2,27 +2,67 @@
 
 namespace App\Tests\Service;
 
+use App\Message\ProcessFile;
 use App\Service\FileHandler;
+use App\Service\Parser;
+use Prophecy\Argument;
+use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Serializer\SerializerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-class FileHandlerTest extends KernelTestCase
-{
-   private $kernel;
 
-    public function __construct(KernelInterface $kernel)
+class FileHandlerTest extends TestCase
+{
+    /**
+     * @var EntityManagerInterface|object
+     */
+    private $entityManager;
+    /**
+     * @var MessageBusInterface
+     */
+    private $messageBus;
+    /**
+     * @var object|SerializerInterface
+     */
+    private $serializerMock;
+    /**
+     * @var Parser
+     */
+    private $parser;
+    /**
+     * @var \App\Entity\File|\Prophecy\Prophecy\ObjectProphecy
+     */
+    private $file;
+    /**
+     * @var ProcessFile|object
+     */
+    private $processFile;
+
+    protected function setUp()
     {
-         $this->kernel = $kernel;
-         parent::__construct();
+        $this->entityManager = $this->prophesize(EntityManagerInterface::class)->reveal();
+        $this->messageBus = $this->prophesize(MessageBusInterface::class);
+        $this->serializerMock = $this->prophesize(SerializerInterface::class)->reveal();
+        $this->parser = new Parser($this->serializerMock);
+        $this->file = $this->prophesize(\App\Entity\File::class)->reveal();
+        $this->processFile = $this->prophesize(ProcessFile::class)->reveal();
+
     }
 
 
-    public function willDispatchOnNewFile()
+    public function testWillDispatchOnNewFile()
     {
         $file = new File(__DIR__.'/../../features/data/file.xml');
-        $result = $this->kernel->getContainer()->get(FileHandler::class)->handle($file);
-        $this->assertInstanceOf(\App\Entity\File::class, $result);
+
+        $handler =$this->prophesize( FileHandler::class)->willBeConstructedWith([$this->messageBus->reveal(),$this->entityManager, $this->parser])
+            ->makeProphecyMethodCall('handle',  [$file])->willReturn();
+
+        $handler->handle($file);
+        $this->assertInstanceOf(\App\Entity\File::class,$handler->handle($file));
+
+
     }
 }

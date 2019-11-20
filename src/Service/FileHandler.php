@@ -7,9 +7,7 @@ namespace App\Service;
 use App\Entity\File;
 use App\Message\ProcessFile;
 use Symfony\Component\HttpFoundation\File\File as FileInterface;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 class FileHandler

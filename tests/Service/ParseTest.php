@@ -4,19 +4,27 @@ namespace App\Tests\Service;
 
 
 use App\Service\Parser;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use PHPUnit\Framework\TestCase;
+
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Serializer\SerializerInterface;
 
 
-class ParseTest extends KernelTestCase
+class ParseTest extends TestCase
 {
     private $parser;
 
+    /**
+     * @var \Prophecy\Prophecy\ObjectProphecy|SerializerInterface
+     */
+    private $serializerMock;
+
     protected function setUp()
     {
-        $kernel = self::bootKernel();
-        $this->parser = $kernel->getContainer()->get(Parser::class);
+        $this->serializerMock = $this->prophesize(SerializerInterface::class)->reveal();
+        $this->parser = new Parser($this->serializerMock);
     }
+
 
     public function testXmlParser()
     {
@@ -24,15 +32,17 @@ class ParseTest extends KernelTestCase
         $result = $this->parser->parsedData($file);
         $this->assertIsArray($result['data']);
     }
+
     public function testCsvParser()
     {
         $file = new File(__DIR__.'/../../features/data/file.csv');
         $result = $this->parser->parsedData($file);
         $this->assertIsArray($result['data']);
     }
+
     public function testJsonParser()
     {
-        $file = new File(__DIR__.'/../../features/data/file.csv');
+        $file = new File(__DIR__.'/../../features/data/file.json');
         $result = $this->parser->parsedData($file);
         $this->assertIsArray($result['data']);
     }

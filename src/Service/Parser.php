@@ -13,6 +13,10 @@ class Parser
 
     private $serializer;
 
+    /**
+     * Parser constructor.
+     * @param SerializerInterface $serializer
+     */
     public function __construct(SerializerInterface $serializer)
     {
         $this->serializer = $serializer;
