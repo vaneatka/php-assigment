@@ -6,6 +6,8 @@ default:
                     kernel: '@kernel'
                 - FeatureContext:
                     kernel: '@kernel'
+                - FileHandleContext:
+                    kernel: '@kernel'
 
 
     extensions:

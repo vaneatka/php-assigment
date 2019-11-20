@@ -4,9 +4,9 @@ Feature: Parse file
   In order to persist data to database
   File should be loaded and converted to associative array
 
-  Scenario: Parse XML File
-    Given a "file.xml" to be parsed
-    When  the "file.xml" is parsed
-    Then  the result was an array
-
+  Scenario: Parse Json File
+    Given We recieve "file.xml" from command line
+    And   We recieve "file.xml" from Web
+    When  I run parse, the result is an array
+    Then  The resulted array contain parsed data
 

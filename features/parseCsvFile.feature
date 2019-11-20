@@ -5,13 +5,7 @@ Feature: Parse file
   File should be loaded and converted to associative array
 
   Scenario: Parse Csv File
-    Given a "data/file.csv" to be parsed
-    When  the "file.csv" is parsed
-    Then  the result was an array
-
-
-  Scenario: When file come the status is "pending" and is in queue
-    Given a "data/file.csv" to be parsed
-    When  the "file.csv" is parsed
-    Then  the result was an array
-
+      Given We recieve "file.csv" from command line
+      And   We recieve "file.csv" from Web
+      When  I run parse, the result is an array
+      Then  The resulted array contain parsed data

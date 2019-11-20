@@ -1,5 +1,8 @@
 <?php
 
+use App\Service\Parser;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Behat\Behat\Context\Context;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -15,50 +18,75 @@ class FileParseContext implements Context
      * @var KernelInterface
      */
     private $kernel;
-    private $extensions = ['csv', 'json', 'xml'];
-    private $fileUrl = __DIR__ . '/../data/';
-    private $result;
+
+    private $fileType;
+    private $uploadedFileType;
+    private $arrayFromFileType;
+    private $arrayFromUpdatedFileType;
 
     public function __construct(KernelInterface $kernel)
     {
+
         $this->kernel = $kernel;
     }
 
-
     /**
-     * @Given /^a "([^"]*)" to be parsed$/
+     * @Given We recieve :arg1 from command line
      */
-    public function aToBeParsed($arg1)
+    public function weRecieveFromCommandLine($arg1)
     {
-        $path=$this->fileUrl.$arg1;
-        if (!$path){
-            throw new Exception('the path_name is not given '. $path);
-        }
-        return false;
-    }
-
-    /**
-     * @When /^the "([^"]*)" is parsed$/
-     */
-    public function theIsParsed($arg1)
-    {
-        $parser = $this->kernel->getContainer()->get(\App\Service\Parser::class);
-        $this->result =  $parser->parsedData($this->fileUrl.$arg1);
+        $file = new File("/app/features/data/$arg1");
+        $this->fileType = $file;
+        if ($file instanceof File){
         return true;
-    }
+        }else{
+            throw new Exception('no');
+        }
 
+
+    }
 
     /**
-     * @Then the result was an array
+     * @Given We recieve :arg1 from Web
      */
-    public function theResultWasAnArray()
+    public function weRecieveFromWeb($arg1)
     {
-        if(!is_array($this->result)){
-            throw new Exception('The result is not an array');
+        $file = new Symfony\Component\HttpFoundation\File\UploadedFile("/app/features/data/$arg1", $arg1);
+        $this->uploadedFileType = $file;
+        if ($file instanceof File){
+            return true;
+        }else {
+            throw new Exception('no');
         }
-        return true;
     }
 
+    /**
+     * @When I run parse, the result is an array
+     */
+    public function iRunParseTheResultIsAnArray()
+    {
+        $parser = $this->kernel->getContainer()->get(Parser::class);
+        $resultOfFileType = $parser->parsedData($this->fileType);
+        $this->arrayFromFileType = $resultOfFileType;
+        $resultOfUpdatedFileType = $parser->parsedData($this->uploadedFileType);
+        $this->arrayFromUpdatedFileType = $resultOfUpdatedFileType;
+        if (is_array($resultOfFileType) && is_array($resultOfUpdatedFileType)){
+            return true;
+        } else {
+            throw new Exception('wrong result type');
+        }
+    }
 
+    /**
+     * @Then The resulted array contain parsed data
+     */
+    public function theResultedArrayContainParsedData()
+    {
+        if ($this->arrayFromFileType['data'] == $this->arrayFromFileType['data'] && !empty($this->arrayFromFileType['data']) )
+        {
+        return true;
+        }
+        throw new Exception('aaaaaaaaaaaa');
+    }
 
 }

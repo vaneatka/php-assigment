@@ -44,6 +44,7 @@ class FileHandler
 
         $message = new ProcessFile($this->parser->parsedData($fileData), $file->getId());
         $this->messageBus->dispatch($message);
+        return $file;
     }
 
 }

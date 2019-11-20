@@ -4,10 +4,9 @@ namespace App\Tests\Service;
 
 
 use App\Service\Parser;
-use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\Serializer\Serializer;
+
 
 class ParseTest extends KernelTestCase
 {
@@ -25,23 +24,16 @@ class ParseTest extends KernelTestCase
         $result = $this->parser->parsedData($file);
         $this->assertIsArray($result['data']);
     }
-public function testCsvParser()
+    public function testCsvParser()
     {
         $file = new File(__DIR__.'/../../features/data/file.csv');
         $result = $this->parser->parsedData($file);
         $this->assertIsArray($result['data']);
     }
-public function testJsonParser()
+    public function testJsonParser()
     {
         $file = new File(__DIR__.'/../../features/data/file.csv');
         $result = $this->parser->parsedData($file);
         $this->assertIsArray($result['data']);
-    }
-
-
-
-    public function testSomething()
-    {
-        $this->assertTrue(true);
     }
 }
