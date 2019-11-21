@@ -6,6 +6,7 @@ use App\Message\ProcessFile;
 use App\Service\FileHandler;
 use App\Service\Parser;
 use Prophecy\Argument;
+use Prophecy\Promise\CallbackPromise;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Messenger\Envelope;
@@ -19,11 +20,11 @@ class FileHandlerTest extends TestCase
     /**
      * @var EntityManagerInterface|object
      */
-    private $entityManager;
+    private $entityManagerMock;
     /**
      * @var MessageBusInterface
      */
-    private $messageBus;
+    private $messageBusMock;
     /**
      * @var object|SerializerInterface
      */
@@ -43,12 +44,12 @@ class FileHandlerTest extends TestCase
 
     protected function setUp()
     {
-        $this->entityManager = $this->prophesize(EntityManagerInterface::class)->reveal();
-        $this->messageBus = $this->prophesize(MessageBusInterface::class);
+        $this->entityManagerMock = $this->prophesize(EntityManagerInterface::class)->reveal();
+        $this->messageBusMock = $this->prophesize(MessageBusInterface::class);
+        $this->messageBusMock->dispatch(Argument::type(ProcessFile::class))->willReturn(new Envelope(Argument::type(ProcessFile::class)));
         $this->serializerMock = $this->prophesize(SerializerInterface::class)->reveal();
         $this->parser = new Parser($this->serializerMock);
         $this->file = $this->prophesize(\App\Entity\File::class)->reveal();
-        $this->processFile = $this->prophesize(ProcessFile::class)->reveal();
 
     }
 
@@ -56,13 +57,11 @@ class FileHandlerTest extends TestCase
     public function testWillDispatchOnNewFile()
     {
         $file = new File(__DIR__.'/../../features/data/file.xml');
-
-        $handler =$this->prophesize( FileHandler::class)->willBeConstructedWith([$this->messageBus->reveal(),$this->entityManager, $this->parser])
-            ->makeProphecyMethodCall('handle',  [$file])->willReturn();
-
-        $handler->handle($file);
-        $this->assertInstanceOf(\App\Entity\File::class,$handler->handle($file));
-
-
+        $handler = new FileHandler($this->messageBusMock->reveal(),$this->entityManagerMock,$this->parser);
+        $fileEntityMock = $this->prophesize(\App\Entity\File::class);
+        $fileEntityMock->setStatus(Argument::type('string'))->willReturn(new \App\Entity\File());
+        $fileEntityMock->getId()->willReturn(1);
+        $assertion = $handler->handle($file, $fileEntityMock->reveal());
+        $this->assertInstanceOf(\App\Entity\File::class, $assertion);
     }
 }

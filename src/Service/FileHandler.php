@@ -32,9 +32,8 @@ class FileHandler
         $this->messageBus = $messageBus;
     }
 
-    public function handle(FileInterface $fileData)
+    public function handle(FileInterface $fileData, File $file)
     {
-        $file = new File();
         $file->setStatus('pending')
             ->setCreatedAt(new \DateTime());
         $this->entityManager->persist($file);

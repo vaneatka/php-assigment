@@ -33,8 +33,10 @@ class IndexController extends AbstractController
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
+            $file = new File();
+            $file->setStatus('input');
             $fileData = $form['fileName']->getData();
-            $fileHandler->handle($fileData);
+            $fileHandler->handle($fileData, $file);
         }
 
         return $this->render(
