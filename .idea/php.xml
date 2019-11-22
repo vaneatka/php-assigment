@@ -95,75 +95,8 @@
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php73" />
       <path value="$PROJECT_DIR$/vendor/symfony/messenger" />
       <path value="$PROJECT_DIR$/vendor/bin/.phpunit" />
+      <path value="$PROJECT_DIR$/public" />
     </include_path>
-  </component>
-  <component name="PhpInterpreters">
-    <interpreters>
-      <interpreter id="695cf5dd-8309-4fd5-8adb-da3616c27b72" name="php" home="docker-compose://DATA" debugger_id="php.debugger.XDebug">
-        <remote_data DOCKER_ACCOUNT_NAME="Docker" DOCKER_COMPOSE_SERVICE_NAME="php" DOCKER_REMOTE_PROJECT_PATH="/opt/project" INTERPRETER_PATH="php" HELPERS_PATH="/opt/.phpstorm_helpers" INITIALIZED="false" VALID="true" RUN_AS_ROOT_VIA_SUDO="false">
-          <dockerComposeConfigurationPaths>
-            <item value="$PROJECT_DIR$/docker-compose.yml" />
-          </dockerComposeConfigurationPaths>
-          <envs />
-          <type_data command="EXEC" />
-        </remote_data>
-      </interpreter>
-    </interpreters>
-  </component>
-  <component name="PhpInterpretersPhpInfoCache">
-    <phpInfoCache>
-      <interpreter name="php">
-        <phpinfo binary_type="PHP" php_cgi="/usr/local/bin/php-cgi" php_cli="/usr/local/bin/php" path_separator=":" version="7.3.11">
-          <additional_php_ini>/usr/local/etc/php/conf.d/docker-php-ext-pdo_mysql.ini, /usr/local/etc/php/conf.d/docker-php-ext-sodium.ini, /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini, /usr/local/etc/php/conf.d/xdebug.ini</additional_php_ini>
-          <configuration_file />
-          <configuration_options>
-            <configuration_option name="include_path" value=".:/usr/local/lib/php" />
-          </configuration_options>
-          <debuggers>
-            <debugger_info debugger="xdebug" debugger_version="2.8.0">
-              <debug_extensions />
-            </debugger_info>
-          </debuggers>
-          <loaded_extensions>
-            <extension name="Core" />
-            <extension name="PDO" />
-            <extension name="Phar" />
-            <extension name="Reflection" />
-            <extension name="SPL" />
-            <extension name="SimpleXML" />
-            <extension name="ctype" />
-            <extension name="curl" />
-            <extension name="date" />
-            <extension name="dom" />
-            <extension name="fileinfo" />
-            <extension name="filter" />
-            <extension name="ftp" />
-            <extension name="hash" />
-            <extension name="iconv" />
-            <extension name="json" />
-            <extension name="libxml" />
-            <extension name="mbstring" />
-            <extension name="mysqlnd" />
-            <extension name="openssl" />
-            <extension name="pcre" />
-            <extension name="pdo_mysql" />
-            <extension name="pdo_sqlite" />
-            <extension name="posix" />
-            <extension name="readline" />
-            <extension name="session" />
-            <extension name="sodium" />
-            <extension name="sqlite3" />
-            <extension name="standard" />
-            <extension name="tokenizer" />
-            <extension name="xdebug" />
-            <extension name="xml" />
-            <extension name="xmlreader" />
-            <extension name="xmlwriter" />
-            <extension name="zlib" />
-          </loaded_extensions>
-        </phpinfo>
-      </interpreter>
-    </phpInfoCache>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.1" />
   <component name="PhpRuntimeConfiguration">
@@ -192,10 +125,5 @@
       <extension name="yar" enabled="true" />
       <extension name="zookeeper" enabled="true" />
     </extensions>
-  </component>
-  <component name="PhpUnit">
-    <phpunit_settings>
-      <phpunit_by_interpreter interpreter_id="695cf5dd-8309-4fd5-8adb-da3616c27b72" load_method="PHPUNIT_PHAR" bootstrap_file_path="config/bootstrap.php" configuration_file_path="phpunit.xml.dist" custom_loader_path="/app/vendor/autoload.php" phpunit_phar_path="vendor/bin/.phpunit/phpunit-7.5-0/bin/simple-phpunit" use_bootstrap_file="true" use_configuration_file="true" />
-    </phpunit_settings>
   </component>
 </project>

@@ -26,25 +26,25 @@ class Parser
     private function parse(FileInterface $file)
     {
         $fileUrl = $file->getPathname();
-        $extension = $file instanceof UploadedFile ? $file->getClientOriginalExtension() : $file->getExtension() ;
+        $extension = $file instanceof UploadedFile ? $file->getClientOriginalExtension() : $file->getExtension();
         $file_content = file_get_contents($fileUrl);
 
-        if (empty($file_content)){
-            $result =  ['results' => [['File Empty']],
+        if (empty($file_content)) {
+            return ['results' => [['File Empty']],
                 "status" => "error"];
-        } else {
-            if ($extension == 'json'){
-                $result = $this->parseJson($file_content);
-            }
-
-            if ($extension == 'xml'){
-                $result = $this->parseXml($file_content);
-            }
-
-            if ($extension == 'csv'){
-                $result = $this->parseCsv($file_content);
-            }
         }
+        if ($extension == 'json') {
+            $result = $this->parseJson($file_content);
+        }
+
+        if ($extension == 'xml') {
+            $result = $this->parseXml($file_content);
+        }
+
+        if ($extension == 'csv') {
+            $result = $this->parseCsv($file_content);
+        }
+
 
         return $result;
     }

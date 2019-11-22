@@ -6,11 +6,9 @@ services:
     volumes:
       - .:/app
       - .:/usr/local/lib/php
-
     ports:
-      - '80:8000'
+      - '8000:80'
       - "9000:9000"
-
     depends_on:
       - mysql
 
@@ -34,3 +32,10 @@ services:
       - 8080:80
     links:
       - mysql
+
+
+  docker-php-fpm:
+    build: .docker/php-fpm
+    tty: true
+    volumes:
+      - ./app:/var/www
