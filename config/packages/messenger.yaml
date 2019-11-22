@@ -4,11 +4,13 @@ framework:
         # failure_transport: failed
 
         transports:
-#             https://symfony.com/doc/current/messenger.html#transport-configuration
-             async: '%env(MESSENGER_TRANSPORT_DSN)%'
+            # https://symfony.com/doc/current/messenger.html#transport-configuration
+#             async: '%env(MESSENGER_TRANSPORT_DSN)%'
             # failed: 'doctrine://default?queue_name=failed'
 #             sync: 'sync://'
+             in_memory: 'in-memory:///'
+             async: 'doctrine://default'
 
         routing:
             # Route your messages to the transports
-             'App\Message\ProcessFile': async
+             'App\Message\ProcessFile': in_memory

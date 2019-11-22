@@ -7,7 +7,6 @@ namespace App\MessageHamdler;
 use App\Entity\File;
 use App\Entity\Map;
 use App\Message\ProcessFile;
-use App\Repository\FileRepository;
 use App\Service\Parser;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;

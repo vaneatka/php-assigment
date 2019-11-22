@@ -6,6 +6,7 @@ use App\Entity\Map;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\UuidInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\FileRepository")
@@ -13,11 +14,21 @@ use Doctrine\ORM\Mapping as ORM;
 class File
 {
     /**
+     * @var UuidInterface|null
      * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="uuid", unique=true)
      */
     private $id;
+
+    /**
+     * @param mixed $id
+     * @return File
+     */
+    public function setId($id): self
+    {
+        $this->id = $id;
+        return $this;
+    }
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -74,7 +85,7 @@ class File
         $this->maps = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): ?string
     {
         return $this->id;
     }

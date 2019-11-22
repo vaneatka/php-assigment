@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\FileType;
+use Ramsey\Uuid\Uuid;
 
 
 class IndexController extends AbstractController
@@ -20,7 +21,6 @@ class IndexController extends AbstractController
     {
         $this->kernel = $kernel;
     }
-
 
     /**
      * @Route("/", name="index")
@@ -34,7 +34,9 @@ class IndexController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()){
             $file = new File();
-            $file->setStatus('input');
+            $file->setId(Uuid::uuid4()->toString())
+                ->setStatus('input');
+
             $fileData = $form['fileName']->getData();
             $fileHandler->handle($fileData, $file);
         }

@@ -6,6 +6,7 @@ namespace App\Service;
 
 use App\Entity\File;
 use App\Message\ProcessFile;
+use App\Repository\FileRepository;
 use Symfony\Component\HttpFoundation\File\File as FileInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -38,7 +39,6 @@ class FileHandler
             ->setCreatedAt(new \DateTime());
         $this->entityManager->persist($file);
         $this->entityManager->flush();
-
         $message = new ProcessFile($this->parser->parsedData($fileData), $file->getId());
         $this->messageBus->dispatch($message);
         return $file;

@@ -4,14 +4,14 @@
 namespace App\Message;
 
 
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Ramsey\Uuid\UuidInterface;
 
 class ProcessFile
 {
-    protected $fileData;
+    private $fileData;
     private $file;
 
-    public function __construct(array $fileData,int $file)
+    public function __construct(array $fileData, string $file)
     {
         $this->fileData = $fileData;
         $this->file = $file;
@@ -22,9 +22,9 @@ class ProcessFile
         return $this->fileData;
     }
     /**
-     * @return integer
+     * @return string
      */
-    public function getFile(): int
+    public function getFile(): string
     {
         return $this->file;
     }

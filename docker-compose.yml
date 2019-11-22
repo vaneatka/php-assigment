@@ -5,10 +5,15 @@ services:
     container_name: sf4_php
     volumes:
       - .:/app
+      - .:/usr/local/lib/php
+
     ports:
-      - '8000:8000'
+      - '80:8000'
+      - "9000:9000"
+
     depends_on:
       - mysql
+
 
   mysql:
     image: mysql:5.7

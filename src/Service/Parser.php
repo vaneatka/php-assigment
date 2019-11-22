@@ -32,18 +32,18 @@ class Parser
         if (empty($file_content)){
             $result =  ['results' => [['File Empty']],
                 "status" => "error"];
-        }
+        } else {
+            if ($extension == 'json'){
+                $result = $this->parseJson($file_content);
+            }
 
-        if ($extension == 'json'){
-            $result = $this->parseJson($file_content);
-        }
+            if ($extension == 'xml'){
+                $result = $this->parseXml($file_content);
+            }
 
-        if ($extension == 'xml'){
-            $result = $this->parseXml($file_content);
-        }
-
-        if ($extension == 'csv'){
-            $result = $this->parseCsv($file_content);
+            if ($extension == 'csv'){
+                $result = $this->parseCsv($file_content);
+            }
         }
 
         return $result;
@@ -62,8 +62,10 @@ class Parser
 
     private function parseXml($content):array {
         try{
-            $result =  ['results' => $this->serializer->decode($content, 'xml'),
-                "status" => 'processed'];
+            $result =  [
+                'results' => $this->serializer->decode($content, 'xml'),
+                "status" => 'processed'
+            ];
         }catch (Exception $error){
             $result =  ['results' => [[$error->getMessage()]],
                 "status" => "error"];

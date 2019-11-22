@@ -11,10 +11,10 @@
     </tr>
     </thead>
     <tbody>
-    {% for file in files %}
+    {% for index , file in files %}
 
     <tr>
-        <th scope="row">{{ file.getId() }}</th>
+        <th scope="row">{{ index +1 }}</th>
         <td>{{ file.getFileName() }}</td>
         <td>{{ file.getDocumentType() }}</td>
         <td>{{ file.getStatus() }}</td>

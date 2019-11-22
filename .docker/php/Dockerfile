@@ -14,9 +14,9 @@ RUN apk add --no-cache $PHPIZE_DEPS \
 
 
 COPY xdebug.ini  /usr/local/etc/php/conf.d/xdebug.ini
+COPY php.ini-development /usr/local/etc/php/php.ini-development
 
 EXPOSE 8000
 EXPOSE 9000
 
 CMD ["php", "-S", "0.0.0.0:8000", "-t", "/app/public", "/app/public/index.php"]
-x
