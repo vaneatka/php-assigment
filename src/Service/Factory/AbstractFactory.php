@@ -16,9 +16,8 @@ abstract class AbstractFactory
 
     public function __construct(SerializerInterface $serializer)
     {
-
         $this->serializer = $serializer;
     }
 
-    abstract public function decode(File $file);
+    abstract public function parsedData(File $file);
 }

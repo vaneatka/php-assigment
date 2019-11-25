@@ -3,7 +3,9 @@
 namespace App\Tests\Service;
 
 
+use App\Service\Factory\ParseFactory;
 use App\Service\Parser;
+use PhpParser\ParserFactory;
 use PHPUnit\Framework\TestCase;
 
 use Prophecy\Argument;
@@ -24,8 +26,7 @@ class ParseTest extends TestCase
     protected function setUp()
     {
         $this->serializerMock = $this->prophesize(SerializerInterface::class)->willImplement(DecoderInterface::class);
-
-        $this->parser = new Parser($this->serializerMock->reveal());
+        $this->parser = new ParseFactory($this->serializerMock->reveal());
     }
 
 

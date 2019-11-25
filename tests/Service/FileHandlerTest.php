@@ -3,6 +3,7 @@
 namespace App\Tests\Service;
 
 use App\Message\ProcessFile;
+use App\Service\Factory\ParseFactory;
 use App\Service\FileHandler;
 use App\Service\Parser;
 use PHPUnit\Framework\Constraint\Attribute;
@@ -49,7 +50,7 @@ class FileHandlerTest extends TestCase
         $this->messageBusMock = $this->prophesize(MessageBusInterface::class);
         $this->messageBusMock->dispatch(Argument::type(ProcessFile::class))->willReturn(new Envelope(Argument::type(ProcessFile::class)));
         $this->serializerMock = $this->prophesize(SerializerInterface::class)->reveal();
-        $this->parser = new Parser($this->serializerMock);
+        $this->parser = new ParseFactory($this->serializerMock);
         $this->file = $this->prophesize(\App\Entity\File::class)->reveal();
 
     }

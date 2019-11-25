@@ -7,6 +7,7 @@ namespace App\Service;
 use App\Entity\File;
 use App\Message\ProcessFile;
 use App\Repository\FileRepository;
+use App\Service\Factory\ParseFactory;
 use Symfony\Component\HttpFoundation\File\File as FileInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -26,7 +27,7 @@ class FileHandler
      */
     private $messageBus;
 
-    public function __construct(MessageBusInterface $messageBus,EntityManagerInterface $entityManager, Parser $parser)
+    public function __construct(MessageBusInterface $messageBus,EntityManagerInterface $entityManager, ParseFactory $parser)
     {
         $this->entityManager = $entityManager;
         $this->parser = $parser;

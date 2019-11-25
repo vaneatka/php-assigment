@@ -5,9 +5,15 @@ namespace App\Service\Factory;
 
 
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Serializer\SerializerInterface;
 
-class FileWebFactory extends AbstractFactory
+class FileWebFactory extends ParseFactory
 {
+    public function __construct(SerializerInterface $serializer)
+    {
+        parent::__construct($serializer);
+    }
+
     public function decode(File $file)
     {
         $result = [
@@ -18,7 +24,7 @@ class FileWebFactory extends AbstractFactory
             'rawContent' => file_get_contents($file->getPathname())
         ];
 
-        if (empty($file)){
+        if (empty(file_get_contents($file))){
             $result['data'] = [
                 'result'=> [['File is empty']],
                 'status' => 'error'
@@ -27,17 +33,16 @@ class FileWebFactory extends AbstractFactory
         }
 
         if ($result['extension'] == 'json') {
-            $result['data'] = (new JsonParser())->decode($file);
+            $result['data'] = (new JsonParser($this->serializer))->decode($file);
         }
 
         if ($result['extension'] == 'xml') {
-            $result['data'] = (new XmlParser())->decode($file);
+            $result['data'] = (new XmlParser($this->serializer))->decode($file);
         }
 
         if ($result['extension'] == 'csv') {
-            $result['data'] = (new CsvParser())->decode($file);
+            $result['data'] = (new CsvParser($this->serializer))->decode($file);
         }
-
 
         return $result;
     }
