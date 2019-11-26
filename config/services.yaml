@@ -29,3 +29,26 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+
+    app.service.factory.xml_parser:
+        class: App\Service\Factory\XmlParser
+        arguments: ['@serializer']
+
+    app.service.factory.csv_parser:
+        class: App\Service\Factory\CsvParser
+        arguments: ['@serializer']
+
+    app.service.factory.json_parser:
+        class: App\Service\Factory\JsonParser
+        arguments: ['@serializer']
+
+    App\Service\Factory\ParseFactory:
+        public: true
+        calls:
+            - [addParser, ['@app.service.factory.xml_parser']]
+            - [addParser, ['@app.service.factory.csv_parser']]
+            - [addParser, ['@app.service.factory.json_parser']]
+
+    App\Repository\FileRepository:
+        public: true

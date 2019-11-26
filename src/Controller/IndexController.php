@@ -3,7 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\File;
+use App\Message\ProcessFile;
+use App\Service\Factory\ParseFactory;
 use App\Service\FileHandler;
+use Prophecy\Argument;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -15,11 +18,16 @@ use Ramsey\Uuid\Uuid;
 class IndexController extends AbstractController
 {
     private $kernel;
+    /**
+     * @var ParseFactory
+     */
+    private $parser;
 
 
-    public function __construct(KernelInterface $kernel)
+    public function __construct(KernelInterface $kernel, ParseFactory $parser)
     {
         $this->kernel = $kernel;
+        $this->parser = $parser;
     }
 
     /**
@@ -36,7 +44,6 @@ class IndexController extends AbstractController
             $file = new File();
             $file->setId(Uuid::uuid4()->toString())
                 ->setStatus('input');
-
             $fileData = $form['fileName']->getData();
             $fileHandler->handle($fileData, $file);
         }

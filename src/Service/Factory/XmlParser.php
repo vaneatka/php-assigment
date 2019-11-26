@@ -4,9 +4,10 @@
 namespace App\Service\Factory;
 
 
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\SerializerInterface;
 
-class XmlParser
+class XmlParser implements ParserInterface
 {
     /**
      * @var SerializerInterface
@@ -19,9 +20,9 @@ class XmlParser
         $this->serializer = $serializer;
     }
 
-    public function decode($contents){
+    public function decode(File $contents): array {
         try {
-            $result = ['results' => $this->serializer->decode($contents, 'xml'),
+            $result = ['results' => $this->serializer->decode(file_get_contents($contents), 'xml'),
                 "status" => 'processed'];
         } catch (\Exception $error){
             $result = ['results' => [[$error->getMessage()]],
@@ -30,4 +31,8 @@ class XmlParser
         return $result;
     }
 
+    public function support(string $extension): bool
+    {
+        return $extension === 'xml';
+    }
 }

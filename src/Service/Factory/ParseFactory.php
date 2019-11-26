@@ -6,20 +6,53 @@ namespace App\Service\Factory;
 
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\Serializer\SerializerInterface;
 
-class ParseFactory extends AbstractFactory
+class ParseFactory
 {
-    public function __construct(SerializerInterface $serializer)
+    protected $parsers = [];
+
+    public function parsedData(File $file): array
     {
-        parent::__construct($serializer);
+        $result = $file instanceof UploadedFile ?
+            [
+                'pathName' => $file->getPathname(),
+                'extension' =>  $file->getClientOriginalExtension(),
+                'fileName' =>$file->getClientOriginalName(),
+                'data' => [],
+                'rawContent' => file_get_contents($file->getPathname())
+            ] :
+            [
+                'pathName' => $file->getPathname(),
+                'extension' =>  $file->getExtension(),
+                'fileName' => $file->getFilename(),
+                'data' => [],
+                'rawContent' => file_get_contents($file->getPathname())
+            ];
+
+        if (empty(file_get_contents($file))){
+            $result['data'] = [
+                'result'=> [['File is empty']],
+                'status' => 'error'
+            ];
+            return $result;
+        }
+
+        /** @var ParserInterface $parser */
+        foreach ($this->parsers as $parser) {
+            if ($parser->support($result['extension'])) {
+                $result['data'] = $parser->decode($file);
+            }
+        }
+
+        return $result;
     }
 
-    public function parsedData(File $file)
+    /**
+     * @param ParserInterface $parser
+     * @return void
+     */
+    public function addParser(ParserInterface $parser): void
     {
-        $parser = $file instanceof UploadedFile ? new FileWebFactory($this->serializer) : new FileCliFactory($this->serializer);
-
-    return $parser->decode($file);
+        $this->parsers[] = $parser;
     }
-
 }

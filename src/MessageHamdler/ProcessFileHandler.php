@@ -26,6 +26,7 @@ class ProcessFileHandler implements MessageHandlerInterface
 
     public function __invoke(ProcessFile $processFile)
     {
+
         $file = $this->entityManager->getRepository(File::class)->find($processFile->getFile());
         try {
         $file_data=$processFile->getFileData();

@@ -4,11 +4,11 @@
 namespace App\Service\Factory;
 
 
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\SerializerInterface;
 
-class CsvParser
+class CsvParser implements ParserInterface
 {
-
     /**
      * @var SerializerInterface
      */
@@ -19,9 +19,10 @@ class CsvParser
         $this->serializer = $serializer;
     }
 
-    public function decode($contents){
+    public function decode(File $contents): array{
+
         try {
-            $result = ['results' => $this->serializer->decode($contents, 'csv'),
+            $result = ['results' => $this->serializer->decode(file_get_contents($contents), 'csv'),
                 "status" => 'processed'];
         } catch (\Exception $error){
             $result = ['results' => [[$error->getMessage()]],
@@ -30,4 +31,8 @@ class CsvParser
         return $result;
     }
 
+    public function support(string $extension): bool
+    {
+        return $extension === 'csv';
+    }
 }

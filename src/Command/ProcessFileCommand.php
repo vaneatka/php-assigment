@@ -3,6 +3,7 @@
 namespace App\Command;
 
 use App\Service\FileHandler;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -36,15 +37,17 @@ class ProcessFileCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-
         $handler = $this->kernel->getContainer()->get(FileHandler::class);
         $fileUrl = __DIR__.'/../../features/data/MOCK_DATA.json';
         $io = new SymfonyStyle($input, $output);
         $arg1 = $input->getArgument('arg1');
 
         if (file_exists($arg1)) {
-            $file = new File($arg1);
-            $handler->handle($file);
+            $file = new \App\Entity\File();
+            $file->setId(Uuid::uuid4()->toString())
+                ->setStatus('input');
+            $fileToSave = new File($arg1);
+            $handler->handle($fileToSave, $file);
 
         } else {
             $io->error('Wrong file path');

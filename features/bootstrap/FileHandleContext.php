@@ -1,8 +1,8 @@
 <?php
 
 
+use App\Service\Factory\ParseFactory;
 use App\Service\FileHandler;
-use App\Service\Parser;
 use Behat\Behat\Context\Context;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\HttpFoundation\File\File;
@@ -14,17 +14,31 @@ class FileHandleContext implements Context
      */
     private $kernel;
 
+    /**
+     * @var File
+     */
     private $fileToBeParsed;
+
     /**
      * @var \App\Entity\File
      */
     private $savedFile;
+    /**
+     * @var \App\Service\Factory\ParseFactory
+     */
+    private $parseFactory;
+    /**
+     * @var \Doctrine\ORM\EntityManagerInterface
+     */
+    private $entityManager;
 
 
     public function __construct(KernelInterface $kernel )
     {
         $this->kernel = $kernel;
 
+        $this->parseFactory = $this->kernel->getContainer()->get(ParseFactory::class);
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -33,8 +47,9 @@ class FileHandleContext implements Context
     public function weGaveAValidToBeProcessed($arg1)
     {
         $file = new File("/app/features/data/$arg1");
-        $resultArray = $this->kernel->getContainer()->get(Parser::class)->parsedData($file);
+        $resultArray = $this->parseFactory->parsedData($file);
         if (!empty($resultArray['data'])){
+            $this->fileToBeParsed = $resultArray;
             $this->fileToBeParsed = $file;
             return true;
         }else{
@@ -48,8 +63,15 @@ class FileHandleContext implements Context
     public function theContentsArePersistedToDatabase()
     {
         $handler = $this->kernel->getContainer()->get(FileHandler::class);
-        $result =  $handler->handle($this->fileToBeParsed);
-        if ($result->getId() !== null){
+
+        $this->savedFile = new \App\Entity\File();
+
+        $this->savedFile
+            ->setId(\Ramsey\Uuid\Uuid::uuid4()->toString())
+            ->setStatus('input');
+        $result =  $handler->handle($this->fileToBeParsed, $this->savedFile);
+        sleep(2);
+        if ($result->getStatus() == 'pending'){
             $this->savedFile = $result;
             return true;
         } else {
@@ -75,10 +97,12 @@ class FileHandleContext implements Context
      */
     public function theFileEntityStatusIs($arg1)
     {
-        if ($arg1 == $this->savedFile->getStatus()){
+        $file = $this->kernel->getContainer()->get(\App\Repository\FileRepository::class)->find($this->savedFile->getId());
+
+        if ($arg1 == $file->getStatus()){
             return true;
         } else {
-            $message = $this->savedFile->getStatus();
+            $message = $file->getStatus();
             throw new Exception("the status is $message");
         }
     }

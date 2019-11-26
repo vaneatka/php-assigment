@@ -5,10 +5,8 @@ services:
     container_name: sf4_php
     volumes:
       - .:/app
-      - .:/usr/local/lib/php
     ports:
-      - '8000:80'
-      - "9000:9000"
+      - '8000:8000'
     depends_on:
       - mysql
 
@@ -33,9 +31,3 @@ services:
     links:
       - mysql
 
-
-  docker-php-fpm:
-    build: .docker/php-fpm
-    tty: true
-    volumes:
-      - ./app:/var/www
