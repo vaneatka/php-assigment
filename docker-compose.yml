@@ -31,3 +31,11 @@ services:
     links:
       - mysql
 
+#  php-fpm:
+#    build:
+#      context: .docker/php-fpm
+#    volumes:
+#      - .:/app
+#    environment:
+#      XDEBUG_CONFIG: "remote_host=host.docker.internal remote_enable=1"
+#      PHP_IDE_CONFIG: "serverName=Docker"

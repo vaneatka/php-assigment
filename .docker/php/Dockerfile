@@ -12,6 +12,8 @@ RUN apk add --no-cache $PHPIZE_DEPS \
     && docker-php-ext-install pdo \
     && docker-php-ext-install pdo_mysql
 
+ADD  ./php.ini    /usr/local/etc/php/php.ini
 COPY xdebug.ini  /usr/local/etc/php/conf.d/xdebug.ini
+
 
 CMD ["php", "-S", "0.0.0.0:8000", "-t", "/app/public", "/app/public/index.php"]

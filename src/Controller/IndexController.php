@@ -3,10 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\File;
-use App\Message\ProcessFile;
 use App\Service\Factory\ParseFactory;
 use App\Service\FileHandler;
-use Prophecy\Argument;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\KernelInterface;

@@ -97,6 +97,9 @@ class FileHandleContext implements Context
      */
     public function theFileEntityStatusIs($arg1)
     {
+
+
+        sleep(20);
         $file = $this->kernel->getContainer()->get(\App\Repository\FileRepository::class)->find($this->savedFile->getId());
 
         if ($arg1 == $file->getStatus()){
